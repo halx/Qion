@@ -1,0 +1,346 @@
+% $Id: manual.tex,v 1.3 2003/06/23 05:32:40 hal Exp $
+%
+% minimalistic manual for the QM/MM-MD program
+%
+
+
+
+\documentclass[12pt,a4paper]{article}
+
+\usepackage{a4wide}
+\usepackage[tbtags]{amsmath}
+\usepackage{amssymb,mathrsfs}
+\usepackage{tabularx}
+\usepackage{overcite}
+
+
+\newcommand{\Option}[1]{\texttt{#1}}
+\newcommand{\OptionValue}[1]{\texttt{#1}}
+\newcommand{\Code}[1]{\texttt{#1}}
+\newcommand{\CmdLine}[1]{\texttt{#1}}
+\newcommand{\Latin}[1]{\textit{#1}}
+\newcommand{\Program}[1]{\textsc{#1}}
+
+
+\begin{document}
+
+
+\section*{QM/MM-MD User Manual (for Version 2.2)}
+
+
+\subsection*{Usage}
+
+\hspace{0.1\columnwidth}\CmdLine{qmmm\_md [-O] [-h] [-w CF2\_file] [$<$]
+  \itshape{input file}}
+
+
+\subsection*{Description}
+
+QM/MM-MD is a program for combined Quantum Mechanics/Molecular
+Mechanics\cite{Sherwood:NIC-3-285,Maseras:JComputChem-16-9-1170,%
+  Matsubara:JPhysChem-100-7-2573,Maseras:ChemCommun-25-1821,%
+  Svensson:JPhysChem-100-50-19357,Dapprich:JMolStructTheoChem-461;462-1,%
+  Bakowies:JPhysChem-100-25-10580,Sauer:JComputChem-21-16-1470,%
+  Warshel:JMolBiol-103-227,Aqvist:ChemRev-93-7-2523,%
+ Singh:JComputChem-7-6-718,Field:JComputChem-11-6-700,Gao:RevCompChem-7-119,%
+ Gao:AccChemRes-29-6-298,Monard:AccChemRes-32-10-904} calculations using
+Molecular Dynamics\cite{Allen:CompSimLiquid-1987,Frenkel:UnderMolSim-1996,%
+  Rapaport:ArtMolDynSim-1997} by sampling in an $NVT$
+ensemble\cite{McQuarrie:StatMech-1976}.  The default mode is to run only
+Molecular Dynamics.  Upon user request, however, additional \Latin{ab initio}
+forces within a user defined sphere---the ``hotspot''
+cell\cite{Kerdcharoen:ChemPhys-211-313}---may be calculated utilizing an
+external program such as
+\Program{Turbomole}\cite{Ahlrichs:METECC-95,Ahlrichs:ChemPhysLett-162-3-165,%
+  Brode:JComputChem-14-10-1142,Ahlrichs:BerBunsenPhysChem-102-6-795,%
+  Arnim:JComputChem-19-15-1746} or \Program{Gaussian}\cite{GAUSSIAN98}.  The
+total force is then calculated by the equation (subtraction
+scheme\cite{Sherwood:NIC-3-285,Matsubara:JPhysChem-100-7-2573,%
+  Svensson:JPhysChem-100-50-19357,Dapprich:JMolStructTheoChem-461;462-1})
+\begin{equation}
+  \label{eq:force}
+  F_{\text{tot}} = F_{\text{MD, system}} + S (F_{\text{QM, hotspot}} -
+  F_{\text{MD, hotspot}})
+\end{equation}
+where $F_{\text{MD, system}}$ are the MD forces of the total simulation system,
+$S$ is a switching function\cite{Stillinger:JChemPhys-60-4-1545}, $F_{\text{QM,
+    hotspot}}$ are the quantum mechanical forces of the hotspot cell, and
+$F_{\text{MD, hotspot}}$ are the MD forces of the hotspot cell.
+
+The input file is read either from standard input or by supplying the input
+file name as the first argument to the program.  By default the output, energy,
+trajectory, and velocity files (present from a previous run) are not
+overwritten but can be forced to be by specifying \Code{-O}.  The optional
+\Code{-w} flag specifies an alternative CF2
+water\cite{Stillinger:JChemPhys-68-2-666,Jansco:ChemPhys-85-377,%
+  Bopp:ChemPhysLett-98-2-129} parameter file.  If called with \Code{-h} the
+program shows a short help message and terminates immediately.
+
+The input file is in namelist format (with the name \Code{\&cntrl}) as
+implemented in many popular implementations of FORTRAN 77 compilers and which
+is now standard in Fortran 90 (note that the end of the namelist should be
+denoted by \Code{\&end}, although some implementations might accept standard
+Fortran 90's slash character '\Code{/}').
+
+Parameters describing the potential function are input after the end of the
+namelist.  The potential function follows the general form
+\begin{equation}
+  \label{eq:two-body}
+  \mathscr{V}_{\text{2bd}} = \frac{q_1q_2}{r} + \frac{A}{r^a} + \frac{B}{r^b} +
+  \frac{C}{r^c} + \frac{D}{r^d} + E\exp(-Fr)
+\end{equation}
+$r$ denotes the distance between pairs of atoms; $q_1$ and $q_2$ are the
+charges of atoms involved; $A$, $B$, $C$, $D$, and $E$ are energy parameters,
+and $F$ is the exponentials parameter; $a$, $b$, $c$, and $d$ are integer power
+parameters.  Parameters are usually taken from a previous potential fit.  Two
+sets, both for oxygen and hydrogen two-body interactions, must be specified.
+Terms which are not used in the potential function are ``switched off'' by
+setting the appropriate parameters to zero.
+
+Additionally a three-body correction potential might be specified to augment
+the two-body potential.  This is necessary especially for doubly and higher
+charged ions because the pure two-body potentials are too less repulsive.
+The three-body potential is currently described by
+\begin{equation}
+  \label{eq:three-body}
+  \begin{split}
+  \mathscr{V}_{\text{3bd}}^{\text{corr}}  &= \Biggl[A \exp{(-Br_{12})}
+  \exp{(-Br_{13})} \exp{(-Cr_{23})} - \frac{D}{r_{12}^k} - \frac{D}{r_{13}^k} -
+  \frac{E}{r_{23}^k}\Biggr] \times \\
+  & \qquad (r_{\text{limit}} - r_{12})^2 (r_{\text{limit}} - r_{13})^2
+  \end{split}
+\end{equation}
+where $r_{12}$ is the distances between ion and oxygen 1, $r_{13}$ is the
+distances between ion and oxygen 2, $r_{23}$ is the distance between oxygen 1
+and oxygen 2; $A$, $B$, and $C$ are potential parameters and $D$, $E$, and $k$
+are optional potential parameters.  The last two terms make sure that not only
+the function but also it's first derivative are zero at the cutoff limit
+$r_{\text{limit}}$.  Currently the forces are evaluated only for the ion and
+the two oxygens, hydrogens stay unaffected.
+
+The program also supports umbrella sampling~\cite{Torrie:ChemPhysLett-28-578,%
+  Roux:CompPhysComm-91-275} along a reaction coordinate which is currently the
+distance between two atoms.  Upon user request the quadratic biasing potential
+\begin{equation}
+  \label{eq:umbrella}
+  \mathscr{V}_{\text{bias}} = \frac{1}{2} k (r - r_0)^2
+\end{equation}
+is applied where $k$ is a user chosen force constant and $r_0$ the desired
+distance to be sampled.  Several windows (different $r_0$'s) along the reaction
+coordinate are required to get the (biased) free energy (potential of mean
+force, PMF).  The $k$ and $r_0$ values for each window must be supplied at the
+end of the input file each on a separate line.
+
+In order to find the parameters for the water model in use, the environment
+variable \Code{QMMM\_MD\_ROOT} must be set.  This variable points to the root
+directory of the QM/MM-MD installation.  The external program which handles the
+\Latin{ab initio} calculations is also searched in this directory.  The file
+extension of this program may be set with the environment variable
+\Code{QMMM\_MD\_FPROG}.  The default is `tm', the other currently valid values
+are `gauss' and `gus' (only partially implemented).  The environment variable
+\Code{QMMM\_MD\_NPROCS} may be set to the number of processors
+\Program{Turbomole} should use.  The environment variable \Code{QMMM\_MD\_STMO}
+may be set to `DFT' to initiate a DFT calculation intended to improve the
+initial guess.
+
+
+\subsection*{Control parameters}
+
+In the following all control parameters will be discussed in two column format.
+The left column contains the parameter, the right side it's description.  The
+data type of each parameter is noted in parentheses in the first column just
+after the parameter's name.  The letters mean: C denotes character type, I
+denotes integer type, F denotes floating point type, and L denotes logical
+(boolean) type.  Most of the parameters have reasonable defaults as noted at
+the end of the second column in parentheses.  A few other parameters, however,
+must be specified explicitly, otherwise the program will terminate with an
+error.
+
+\subsubsection*{Parameters controlling filenames of input and output files}
+
+\begin{tabularx}{\columnwidth}{p{0.25\columnwidth}X}
+  \Option{fout}(C) & output file which shows a banner, a summary of all
+  parameters with their values, and energy statistics as the simulation
+  proceeds (\OptionValue{QMMM-MD.out}) \\
+  \Option{fenout}(C) & energy file which contains the temperature, pressure
+  (currently only rudimentarily implemented), and energy contributions at each
+  time step in a multicolumn format
+  (\OptionValue{QMMM-MD.en}) \\
+  \Option{fqmen}(C) & energy file which contains the instantaneous QM/MM
+  energies (empty, only written if set) \\
+  \Option{finfo}(C) & energy statistics of the last \Option{nstat} steps
+  (\OptionValue{QMMM-MD.info}) \\
+  \Option{fstart}(C) & file which contains the starting configuration: two sets
+  of coordinates, velocities, and forces (\OptionValue{QMMM-MD.rvf}) \\
+  \Option{frst}(C) & restart file, the current configuration (two sets of
+  coordinates, velocities, and forces) will be written to this file
+  (\OptionValue{QMMM-MD.rst}) \\
+  \Option{ftraj}(C) & trajectory file (empty, only written if set) \\
+  \Option{fveloc}(C) & velocity file (empty, only written if set) \\
+  \Option{fumbst}(C) & histogram obtained from umbrella sampling
+  (\OptionValue{umb.hst}) \\
+  \Option{fumbtr}(C) & umbrella sampling trace file, writes distances as
+  described by \Option{nuidx1} and \Option{nudix2} for every step (empty, only
+  written if set) \\
+\end{tabularx}
+
+
+\subsubsection*{Parameters controlling output and frequency of output}
+
+\begin{tabularx}{\columnwidth}{p{0.25\columnwidth}X}
+  \Option{nstat}(I) & update energy statistics every \Option{nstat} steps in
+  files \Option{fenout} and \Option{finfo}, also controls the correction of
+  linear momentum if hard-scaling is done (\OptionValue{10}) \\
+  \Option{naver}(I) & write energy statistics every \Option{naver} steps in
+  file \Option{fout}, must be a multiple of \Option{nstat} to be effective
+  (\OptionValue{0}) \\
+  \Option{nout}(I) & energy statistics is written to the output file
+  \Option{fout} every \Option{nout}$\times$\Option{nstat} steps
+  (\OptionValue{1}) \\
+  \Option{nrst}(I) & write restart file \Option{frst} every \Option{nrst} steps
+  (\OptionValue{10}) \\
+  \Option{noutcv}(I) & update the trajectory and velocity file \Option{ftraj}
+  every \Option{noutcv} steps (\OptionValue{10}) \\
+\end{tabularx}
+
+
+\subsubsection*{Parameters controlling time steps}
+
+\begin{tabularx}{\columnwidth}{p{0.25\columnwidth}X}
+  \Option{dt}(F) & time step $\delta t$ in picoseconds (\OptionValue{0.0002})
+  \\
+  \Option{nstep}(I) & number of time steps to be performed (\OptionValue{10})
+  \\
+  \Option{init}(L) & if \Option{init} is true start counting time steps from
+  zero, otherwise read time step at which to start from the restart file
+  \Option{frst} (\OptionValue{t}) \\
+  \Option{iprcor}(L) & if \Option{iprcor} is true the normal
+  predictor/corrector algorithm is used, velocity Verlet otherwise
+  (\OptionValue{t})
+\end{tabularx}
+
+
+\subsubsection*{Parameters controlling the temperature}
+
+\begin{tabularx}{\columnwidth}{p{0.25\columnwidth}X}
+  \Option{topt}(F) & sets the target temperature $T$ of the system in Kelvin
+  (\OptionValue{298.16}) \\
+  \Option{thaut}(F) & sets the relaxation time $\tau$ in picoseconds
+  (\OptionValue{0.1}) \\
+  \Option{nscale}(I) & hard-scale the velocities of water molecules by
+  $\sqrt{T_{\text{opt}}/T}$ the first \Option{nscale} steps, the linear momenta
+  are corrected every \Option{nstat} steps (\OptionValue{0}) \\
+\end{tabularx}
+
+
+\subsubsection*{Parameters controlling potentials and forces}
+
+\begin{tabularx}{\columnwidth}{p{0.25\columnwidth}X}
+  \Option{ihot}(L) & if \Option{ihot} is true, perform a hotspot calculation;
+  Note: options \Option{ron} and \Option{roff} must be set as well
+  (\OptionValue{f}) \\
+  \Option{ithree}(L) & if \Option{ithree} is true, the three-body potential
+  will be applied for the ion; Note: options \Option{a3bd}, \Option{b3bd}, and
+  \Option{c3bd} must also be set (\OptionValue{f}) \\
+  \Option{a3bd}, \Option{b3bd}, \Option{c3bd} (3F) & three-body potential
+  parameters (no defaults, must be set explicitly if \Option{ithree} is true)
+  \\
+  \Option{d3bd}, \Option{e3bd}, \Option{k3bd} (2F, I) & optional three-body
+  potential parameters, see equation~(\ref{eq:three-body}) (\OptionValue{0.0,
+    0.0, 0}) \\
+  \Option{iguess}(L) & if \Option{iguess} is true, the initial guess of the
+  start MO vector must be supplied by the user, otherwise the external force
+  program must calculate the initial guess from scratch (\OptionValue{f}) \\
+  \Option{irf}(L) & if \Option{irf} is true, apply the reaction
+  field\cite{vanGunsteren:FaradayDiscussChemSoc-66-58,Adams:MolPhys-38-2-387}
+  (\OptionValue{t}) \\
+  \Option{ion}(L) & if \Option{ion} is true, a simulation with an ion is
+  performed, otherwise a simulation of neat liquid (\OptionValue{t}) \\
+  \Option{intra}(L) & if \Option{intra} is true, the intra-molecular
+  potential\cite{Bopp:ChemPhysLett-98-2-129} will be applied, otherwise only
+  the CF2 water
+  model\cite{Stillinger:JChemPhys-68-2-666,Jansco:ChemPhys-85-377}
+  (\OptionValue{t}) \\
+  \Option{iumb}(L) & if \Option{iumb} is true, an umbrella biasing potential
+  will be applied to \Option{nuidx1} and \Option{nudix2} (\OptionValue{f}) \\
+  \Option{nwin}(I) & number of windows for umbrella sampling (\OptionValue{0})
+  \\
+  \Option{numbeq}(I) & number of pre-equilibration steps in each window
+  (\OptionValue{0}) \\
+  \Option{nuidx1}, \Option{nuidx2}(2I) & indexes of atoms describing a reaction
+  coordinate along which the umbrella biasing potential will be applied
+  (\OptionValue{0, 0}) \\
+  \Option{hdel}(F) & bin size of statistics for umbrella sampling
+  (\OptionValue{0.1})
+\end{tabularx}
+
+
+\subsubsection*{Parameters controlling distances}
+
+\begin{tabularx}{\columnwidth}{p{0.25\columnwidth}X}
+  \Option{dens}(F) & sets the density of the solution in g/cm$^3$
+  (the density of pure water at 298\,K, i.e. 0.997\,g/cm$^3$) \\
+  \Option{ron}, \Option{roff}(2F) & defines the region in \AA{}ngstr\"om where
+  the switching function\cite{Stillinger:JChemPhys-60-4-1545} should be applied,
+  \Option{roff} also sets the size of the hotspot cell and must be grater than
+  2.5\AA (no defaults, must be set explicitly if \Option{ihot} is true) \\
+  \Option{rcut}(F) & sets the cutoff radii in \AA{}ngstr\"om for all Coulomb
+  interactions and non-Coulomb ion-O, ion-H, and O-O interactions
+  (no defaults, must be set explicitly) \\
+  \Option{r3bd}(F) & sets the cutoff radius $r_{\text{limit}}$ in
+  \AA{}ngstr\"om for the three-body interactions (6.0\,\AA)
+\end{tabularx}
+
+
+\subsubsection*{Parameters controlling properties of the ion and water}
+
+\begin{tabularx}{\columnwidth}{p{0.25\columnwidth}X}
+  \Option{ion}(L) & if \Option{ion} is true a simulation with an ion is done,
+  otherwise a simulation of pure water (true) \\
+  \Option{ionnam}(C) & abbreviated element name of the ion (no default, must be
+  set explicitly) \\
+  \Option{qion}(F) & atom charge of the ion (no default, must be set
+  explicitly) \\
+  \Option{amion}(F) & atom mass of the ion looked up from internal
+  periodic table, but can be given explicitly to overwrite internal value \\
+  \Option{amo}(F) & atom mass of the oxygen (\OptionValue{15.9994}) \\
+  \Option{amh}(F) & atom mass of the hydrogen (\OptionValue{1.00794}) \\
+\end{tabularx}
+
+
+\subsubsection*{Potential parameters}
+
+Potential parameters for the two-body potential are not part of the namelist,
+but are input at the end of the namelist in the following format.  Six floating
+point values on a line specify the parameters $A$ through $F$, on the next line
+the four floating point parameters $a$ through $d$ are given.  This input is
+applied twice: once for oxygen parameters and once for hydrogen parameters.  If
+any parameters are not needed, refer to equation~(\ref{eq:two-body}) and set
+these parameters to zero accordingly.
+
+In contrast, three-body parameters are input as namelist variables since there
+are only five of them.
+
+
+\bibliographystyle{manual}
+\bibliography{journal-abbrev,manual}
+
+\end{document}
+
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
+
+% LocalWords:  qmmm ile TURBOMOLE ntrl OOT PROG PROCS fout rudimentarily finfo
+% LocalWords:  nstat fstart rvf frst rst ftraj traj fveloc vel nout nrst noutc
+% LocalWords:  noutv nstep init iprcor Verlet topt thaut nscale ron ihot roff
+% LocalWords:  iguess irf ithree rcut ngstr ionnam qion amion amo amh Matsubara
+% LocalWords:  Turbomole JPhysChem Maseras ChemCommun Svensson Dapprich Sauer
+% LocalWords:  JMolStructTheoChem Bakowies JComputChem Warshel JMolBiol Aqvist
+% LocalWords:  ChemRev Singh Gao RevCompChem AccChemRes Monard Rapaport NVT PMF
+% LocalWords:  ArtMolDynSim initio hotspot Brode Ahlrichs BerBunsenPhysChem gus
+% LocalWords:  Arnim Bopp ChemPhysLett namelist cntrl Roux CompPhysComm FPROG
+% LocalWords:  NPROCS STMO DFT fenout fqmen fumbst umb hst fumbtr nuidx nudix
+% LocalWords:  naver noutcv iumb nwin numbeq pre hdel

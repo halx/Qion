@@ -1,0 +1,28 @@
+ example input file showing most parameters with their default params
+
+ &cntrl
+  ion = t,
+  ionnam = 'Li', qion = 1.0, amion = 6.941, amo = 15.9994, amh = 1.00794,
+  dt = 1.0002, topt = 298.0, taut = 0.5, nscale = 0, eqmot = 1,
+  dens = 0.997, rcut = 0.0,
+  ihot = f, iguess = f, ron = 0.0, roff = 0.0,
+  ithree = f, r3bd = 6.0,
+  a3bd = 0.0, b3bd = 0.0, c3bd = 0.0, d3bd = 0.0, e3bd = 0.0, k = 0,
+  intra = t, irf = t,
+  init = t, nstep = 10, nout = 1, nstat = 10, nrst = 10, noutcv = 10,
+    naver = 100, ncom = 5000,
+
+  fout = 'qion.out',
+  fenout = 'qion.en',
+  fqmen = ' ',
+  finfo = 'qion.info',
+  fstart = 'qion.rvf',
+  frst = 'qion.rst',
+  ftraj = ' ',
+  fveloc = ' ',
+ &end
+ 
+ -899.6758090  3473.5398804  -5344.0700720  4221.6083882  0.0  0.0
+            4             6              9            12
+  200.8513230  -342.3087182    250.7581516   -64.8277670  0.0  0.0
+            4             5              7            12

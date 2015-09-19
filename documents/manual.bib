@@ -1,0 +1,444 @@
+% literature with details for the QM/MM-MD method
+
+
+
+@Preamble("\providecommand{\Latin}[1]{\textit{#1}\xspace} ")
+@Preamble("\providecommand{\Shell}[1]{\textit{#1}\xspace} ")
+@Preamble("\providecommand{\TM}{\textsc{Turbomole}\xspace} "
+#"\providecommand{\Latin}[1]{\textit{#1}\xspace} ")
+
+
+@Article(Adams:MolPhys-38-2-387,
+  author     = "David J. Adams and Eveline M. Adams and Graham J. Hills",
+  title	     = "The computer simulation of polar liquids",
+  journal    = molph,
+  year	     = 1979,
+  volume     = 38,
+  number     = 2,
+  pages	     = "387--400"
+)
+
+@Article(Ahlrichs:BerBunsenPhysChem-102-6-795,
+  author     = "Reinhart Ahlrichs and Simon D. Elliott and Uwe Huniar",
+  title	     = "Quantum Chemistry: Large Molecules -- Small Computers",
+  journal    = bbpc,
+  year	     = 1998,
+  volume     = 102,
+  number     = 6,
+  pages	     = "795--804"
+)
+
+@Article(Ahlrichs:ChemPhysLett-162-3-165,
+  author     = "Reinhart Ahlrichs and Michael B{\"{a}}r and Marco H{\"{a}}ser
+                and Hans Horn and Christoph K{\"{o}}lmel",
+  title	     = "Electronic Structure Calculations on Workstation Computers: The
+                Program System {TURBOMOLE}",
+  journal    = cpl,
+  year	     = 1989,
+  volume     = 162,
+  number     = 3,
+  pages	     = "165--169",
+  abstract   = "The basic structure of the program system TURBOMOLE for SCF --
+                including first and second analytical derivatives with respect
+                to nuclear coordinates -- and MP2 calculations is briefly
+                described. The program takes full advantage of all discrete
+                point group symmetries and has only modes -- and (partially)
+                adjustable -- I/O and background storage requirements. The
+                performance of TURBOMOLE is documented for demonstrative
+                applications"
+)
+
+@InCollection(Ahlrichs:METECC-95,
+  author     = "Reinhart Ahlrichs and von Arnim, Malte",
+  title	     = "{TURBOMOLE}, parallel implementation of {SCF}, density
+                functional, and chemical shift modules.",
+  booktitle  = "Methods and Techniques in Computational Chemistry: METECC-95",
+  publisher  = "STEF Cagliari",
+  year	     = 1995,
+  editor     = "E. Clementi and G. Corongiu",
+  chapter    = 13,
+  pages	     = "509--554"
+)
+
+@Book(Allen:CompSimLiquid-1987,
+  author     = "M. P. Allen and D. J. Tildesley",
+  title	     = "Computer Simulation of Liquids",
+  publisher  = "Oxford Science Publications",
+  year	     = 1987,
+  address    = "Great Clarendon Street, Oxford OX2 6DP, United Kingdom"
+)
+
+@Article(Andrea:JChemPhys-79-9-4576,
+  author     = "Tariq A. Andrea and William C. Swope and Hans C. Andersen",
+  title	     = "The role of long ranged forces in determining the structure and
+                properties of liquid water",
+  journal    = jcp,
+  year	     = 1983,
+  volume     = 79,
+  number     = 9,
+  pages	     = "4576--4584"
+)
+
+@Article(Aqvist:ChemRev-93-7-2523,
+  author     = "Johan {\AA}qvist and Arieh Warshel",
+  title	     = "Simulation of Enzyme Reactions Using Valence Bond Force Fields
+                and Other Hybrid Quantum/Classical Approaches",
+  journal    = cr,
+  year	     = 1993,
+  volume     = 93,
+  number     = 7,
+  pages	     = "2523--2544"
+)
+
+@Article(Arnim:JComputChem-19-15-1746,
+  author     = "von Arnim, Malte and Reinhart Ahlrichs",
+  title	     = "Performance of Parallel {TURBOMOLE} for Density Functional
+                Calculations",
+  journal    = jcc,
+  year	     = 1998,
+  volume     = 19,
+  number     = 15,
+  pages	     = "1746--1757",
+  abstract   = "The parallelization of density functional treatments of
+                molecular electronic energy and first-order gradients is
+                described, and the performance is documented. The quadrature
+                required for exchange correlation term and the treatment of
+                exact Coulomb interactions scales virtually linearly up to 100
+                nodes. The RI-J technique to approximate Coulomb interactions
+                (by means of an auxiliary basis set approximation for the
+                electron density) even shows superlinear speedup on distributed
+                memory architectures. The bottleneck is then linear
+                algebra. Demonstrative application examples include molecules
+                with up to 300 atoms and 3000 basis functions that can now be
+                treated in a few hours per geometry optimization cycle in C$_1$
+                symmetry.",
+  keywords   = "ab initio, density functional, parallelization, quantum
+                chemistry, message passing"
+)
+
+@Article(Bakowies:JPhysChem-100-25-10580,
+  author     = "Dirk Bakowies and Walter Thiel",
+  title	     = "Hybrid Models for Combined Quantum Mechanical and Molecular
+                Mechanical Approaches",
+  journal    = jpc,
+  year	     = 1996,
+  volume     = 100,
+  number     = 25,
+  pages	     = "10580-10594"
+)
+
+@Article(Bopp:ChemPhysLett-98-2-129,
+  author     = "P. Bopp and G. Jansc{\'{o}} and K. Heinzinger",
+  title	     = "AN IMPROVED POTENTIAL FOR NON-RIGID WATER MOLECULES IN THE
+                LIQUID PHASE",
+  journal    = cpl,
+  year	     = 1983,
+  volume     = 98,
+  number     = 2,
+  pages	     = "129--133",
+  annote     = "intra-molecular potential augmenting CF2 water model, see
+                Stillinger:JChemPhys-68-2-666"
+)
+
+@Article(Brode:JComputChem-14-10-1142,
+  author     = "Stefan Brode and Hans Horn and Michael Ehrig and Diane Moldrup
+                and Julia E. Rice and Reinhart Ahlrichs",
+  title	     = "Parallel Direct {SCF} and Gradient Program for Workstation
+                Clusters",
+  journal    = jcc,
+  year	     = 1993,
+  volume     = 14,
+  number     = 10,
+  pages	     = "1142--1148",
+  abstract   = "A parallel direct SCF and gradient program for workstation
+                clusters has been implemented on the basis of the \textit{ab
+                initio} program package TURBOMOLE. Applications on large
+                molecular systems monitor an appreciable speedup in residence
+                time."
+)
+
+@Article(Brooks:JComputChem-4-2-187,
+  author     = "Bernard R. Brooks and Robert E. Bruccoleri and Barry D. Olafson
+                and David J. States and S. Swaminathan and Martin Karplus",
+  title	     = "\textsc{Charmm}: A Program for Macromolecular Energy,
+                Minimization, and Dynamics Calculations",
+  journal    = jcc,
+  year	     = 1983,
+  volume     = 4,
+  number     = 2,
+  pages	     = "187--217",
+  annote     = "Description of the CHARMM (Chemistry at HARvard Macromolecular
+                Mechanics) program"
+)
+
+@Article(Dapprich:JMolStructTheoChem-461;462-1,
+  author     = "Stefan Dapprich and Istv{\`{a}}n Kom{\`{a}}romi and K. Suzie
+                Byun and Keiji Morokuma and Michael J. Frisch",
+  title	     = "A new {ONIOM} implementation in Gaussian98. {P}art {I}. {T}he
+                calculation of energies, gradients, vibrational frequencies and
+                electronic field derivatives",
+  journal    = jmst,
+  year	     = 1999,
+  volume     = "461--462",
+  pages	     = "1--21"
+)
+
+@Article(Field:JComputChem-11-6-700,
+  author     = "Martin J. Field and Paul A. Bash and Martin Karplus",
+  title	     = "A Combined Quantum Mechanical and Molecular Mechanical
+                Potential for Molecular Dynamics Simulations",
+  journal    = jcc,
+  year	     = 1990,
+  volume     = 11,
+  number     = 6,
+  pages	     = "700--733"
+)
+
+@Book(Frenkel:UnderMolSim-1996,
+  author     = "Daan Frenkel and Berend Smit",
+  title	     = "Understanding Molecular Simulation",
+  publisher  = "Academic Press",
+  year	     = 1996
+)
+
+@Manual(GAUSSIAN98,
+  title	     = "GAUSSIAN 98",
+  author     = "M. J. Frisch and others",
+  organization= "Gaussian Inc.",
+  address    = "Pittsburgh, PA",
+  year	     = 1998
+)
+
+@Article(Gao:AccChemRes-29-6-298,
+  author     = "Jiali Gao",
+  title	     = "Hybrid Quantum and Molecular Mechanical Simulations: An
+                Alternative Avenue to Solvent Effects in Organics Chemistry",
+  journal    = acr,
+  year	     = 1996,
+  volume     = 29,
+  number     = 6,
+  pages	     = "298--305"
+)
+
+@InCollection(Gao:RevCompChem-7-119,
+  author     = "Jiali Gao",
+  title	     = "Methods and Applications of Combined Quantum Mechanical and
+                Molecular Mechanical Potentials",
+  booktitle  = rcc,
+  pages	     = "119--185",
+  publisher  = "VCH Publishers",
+  year	     = 1996,
+  editor     = "Kenny B. Lipkowitz and Donald B. Boyd",
+  volume     = 7,
+  chapter    = 3,
+  address    = "New York"
+)
+
+@Article(Jansco:ChemPhys-85-377,
+  author     = "G. Jansc{\'{o}} and P. Bopp and K. Heinzinger",
+  title	     = "MOLECULAR DYNAMICS STUDY OF HIGH-DENSITY LIQUID WATER USING A
+                MODIFIED CENTRAL-FORCE POTENTIAL",
+  journal    = cp,
+  year	     = 1984,
+  volume     = 85,
+  pages	     = "377-387",
+  annote     = "modified CF2 (high pressure corrections for V$_{H-H}$"
+)
+
+@Article(Kerdcharoen:ChemPhys-211-313,
+  author     = "Teerakiat Kerdcharoen and Klaus R. Liedl and Bernd M. Rode",
+  title	     = "A {QM}/{MM} simulation method applied to the solution of Li$^+$
+                in liquid ammonia",
+  journal    = cp,
+  year	     = 1996,
+  volume     = 211,
+  pages	     = "313--323"
+)
+
+@Article(Maseras:ChemCommun-25-1821,
+  author     = "Feliu Maseras",
+  title	     = "The {IMOMM} method opens the way for the accurate calculation
+                of ``real´´ transition metal complexes",
+  journal    = chc,
+  year	     = 2000,
+  volume     = 25,
+  pages	     = "1821--1827"
+)
+
+@Article(Maseras:JComputChem-16-9-1170,
+  author     = "Feliu Maseras and Keiji Morokuma",
+  title	     = "{IMOMM}: A new Integrated {Ab Initio} + Molecular Mechanics
+                Geometry Optimization Scheme of Equilibrium Structures and
+                Transition States",
+  journal    = jcc,
+  year	     = 1995,
+  volume     = 16,
+  number     = 9,
+  pages	     = "1170--1179"
+)
+
+@Article(Matsubara:JPhysChem-100-7-2573,
+  author     = "Toshiaki Matsubara and Feliu Maseras and Nobuaki Koga and Keiji
+                Morokuma",
+  title	     = "Application of the New ``Integrated {MO} + {MM}'' ({IMOMM})
+                Method to the Organometallic Reaction {Pt(PR$_3$)$_2$ + H$_2$
+                (R = H, Me, \textit{t}-Bu, and Ph)}",
+  journal    = jpc,
+  year	     = 1996,
+  volume     = 100,
+  number     = 7,
+  pages	     = "2573--2580"
+)
+
+@Book(McQuarrie:StatMech-1976,
+  author     = "D. A. McQuarrie",
+  title	     = "Statistical Mechanics",
+  publisher  = "Harper \& Row",
+  year	     = 1976,
+  address    = "New York"
+)
+
+@Article(Monard:AccChemRes-32-10-904,
+  author     = "G{\'{e}}rald Monard and Merz, Jr., Kenneth M.",
+  title	     = "Combined Quantum Mechanical/Molecular Mechanical Methodologies
+                Apllied to Biomolecular Systems",
+  journal    = acr,
+  year	     = 1999,
+  volume     = 32,
+  number     = 10,
+  pages	     = "904--911"
+)
+
+@Book(Rapaport:ArtMolDynSim-1997,
+  author     = "Dennis C. Rapaport",
+  title	     = "The Art of Molecular Dynamics Simulation",
+  publisher  = "Cambridge University Press",
+  year	     = 1995,
+  address    = "The Pitt Building, Trumpington Street, Cambridge CB2 1RP,
+                United Kingdom"
+)
+
+@Article(Roux:CompPhysComm-91-275,
+  author     = "Beno{\^{i}} Roux",
+  title	     = "The calculation of the potential of mean force using computer
+                simulations",
+  journal    = cpc,
+  year	     = 1995,
+  volume     = 91,
+  pages	     = "275--282"
+)
+
+@Article(Sauer:JComputChem-21-16-1470,
+  author     = "Joachim Sauer and Marek Sierka",
+  title	     = "Combining Quantum Mechanics and Interatomic Potential Functions
+                in {\latin{Ab Initio}} Studies of Extended Systems",
+  journal    = jcc,
+  year	     = 2000,
+  volume     = 21,
+  number     = 16,
+  pages	     = "1470--1493"
+)
+
+@InProceedings(Sherwood:NIC-3-285,
+  author     = "Paul Sherwood",
+  title	     = "Hybrid Quantum Mechanics/Molecular Mechanics Approaches",
+  booktitle  = "Modern Methods and Algorithms of Quantum Chemistry",
+  pages	     = "285--305",
+  year	     = 2000,
+  editor     = "J. Grotendorst",
+  volume     = 3,
+  address    = "J{\"{u}}lich, Germany",
+  organization= "John von Neumann Institute for Computing",
+  publisher  = "NIC Series (http://www.fz-juelich.de/nic-series/)"
+)
+
+@Article(Singh:JComputChem-7-6-718,
+  author     = "U. C. Singh and P. A. Kollman",
+  title	     = "A combined \latin{ab initio} quantum mechanical and molecular
+                mechanical method for carrying out simulations on complex
+                molecular systems: {A}pplication to the {CH$_3$Cl + Cl$^-$}
+                exchange reaction and gas-phase protonation of polyethers",
+  journal    = jcc,
+  year	     = 1986,
+  volume     = 7,
+  number     = 6,
+  pages	     = "718--730"
+)
+
+@Article(Stillinger:JChemPhys-60-4-1545,
+  author     = "Frank H. Stillinger and Anessur Rahman",
+  title	     = "Improved simulation of liquid water by molecular dynamics",
+  journal    = jcp,
+  year	     = 1974,
+  volume     = 60,
+  number     = 4,
+  pages	     = "1545--1557",
+  annote     = "ST2 water, switching function"
+)
+
+@Article(Stillinger:JChemPhys-68-2-666,
+  author     = "F. H. Stillinger and A. Rahman",
+  title	     = "Revised central force potentials for water",
+  journal    = jcp,
+  year	     = 1978,
+  volume     = 68,
+  number     = 2,
+  pages	     = "666--670",
+  annote     = "CF2 water model"
+)
+
+@Article(Svensson:JPhysChem-100-50-19357,
+  author     = "Mats Svensson and St{\'{e}}phane Humbel and Robert D. J. Froese
+                and Toshiaki Matsubara and Stefan Sieber and Keiji Morokuma",
+  title	     = "{ONIOM}: A Multilayered Integrated {MO} + {MM} Method for
+                Geometry Optimizations and Single Point Energy Predictions. {A}
+                test for Diels-Alder Reactions and
+                {Pt(P(\textit{t}-Bu$_3$)$_2$) + H$_2$} Oxidative Addition",
+  journal    = jpc,
+  year	     = 1996,
+  volume     = 100,
+  number     = 50,
+  pages	     = "19357--19363"
+)
+
+@Article(Tanabe:JChemSocFaraday-84-6-679,
+  author     = "Yukitoshi Tanabe and Bernd M. Rode",
+  title	     = "Monte Carlo Simulation of an 18.45 mol\% Aqueous Ammonia
+                Solution",
+  journal    = jcsft2,
+  year	     = 1988,
+  volume     = 84,
+  number     = 6,
+  pages	     = "679--692"
+)
+
+@Article(Torrie:ChemPhysLett-28-578,
+  author     = "G. M. Torrie and J. P. Valleau",
+  title	     = "???",
+  journal    = cpl,
+  year	     = 1974,
+  volume     = 28,
+  pages	     = 578
+)
+
+@Article(Warshel:JMolBiol-103-227,
+  author     = "A. Warshel and M. Levitt",
+  title	     = "Theoretical Studies of Enzymic Reactions: Dielectric,
+                Electrostatic and Steric Stabilization of the Carbenium Ion in
+                the Reaction of Lysozyme",
+  journal    = jmb,
+  year	     = 1976,
+  volume     = 103,
+  pages	     = 227
+)
+
+@Article(vanGunsteren:FaradayDiscussChemSoc-66-58,
+  author     = "van Gunsteren, Wilfred F. and Herman J. C. Berendsen and Johan
+                A. C. Rullman",
+  title	     = "Inclusion of Reaction Fields in Molecular Dynamics: Application
+                to Liquid Water",
+  journal    = fdcs,
+  year	     = 1978,
+  volume     = 66,
+  pages	     = "58--70"
+)

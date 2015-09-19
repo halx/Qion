@@ -1,0 +1,139 @@
+#! /usr/bin/perl
+# $Id: calc_forces.gus,v 1.3 2005/06/07 10:12:20 hal Exp $
+#
+# calc_forces.gauss: compute ab initio forces via GAMESS-US
+#
+# Note: ECPs not supported at the moment (due to the strange format)
+#
+
+
+
+# get script's name
+my $progname = $0;
+$progname =~ s{^.*/}{};
+
+my $qmmm_coords = $ARGV[0];	# file with coords from QM zone
+my $qmmm_forces = $ARGV[1];	# file into which forces will be written
+my $qmmm_pntchs = $ARGV[2];	# file containing point charges
+my $changed = $ARGV[3];		# flag indicating changes in the QM zone
+
+my $base = "gus";
+my $template_file = "$base.template"; # must exist!
+my $gus_in_file = $ENV{'INPUT'}; # temporary GAMESS-US input file
+my $gus_punch_file = $ENV{'PUNCH'}; # temporary GAMESS-US punch file
+my $gus_out_file = "$base.out"; # temporary Gaussian output file
+my $gus_out_file_prev = $gus_out_file . ".prev";
+my $gus_energy_file = "$base.energy";
+
+my $ok = 0;			# error flag
+my $gradient_found = 0;		# error flag
+
+my @gus_out = ();		# collects GAMESS output
+my @gradient = ();		# helper variable
+
+# nuclear charges (to be completed)
+%znuc = ("h" => 1.0,
+	 "li" => 3.0,
+	 "o" => 8.0);
+
+
+# create input file from template
+open (TEMPLATE, "< $template_file") or
+  die "$progname: can't open $template_file";
+open (HOT_COORDS, "< $qmmm_coords") or
+  die "$progname: can't open $qmmm_coords";
+open (GUS_IN, "> $gus_in_file") or
+  die "$progname: can't open $gus_in_file";
+
+
+# copy the contents of the template file into the input file
+while (<TEMPLATE>) {
+  unless ($changed) {
+    s{IREST=-?\d}{IREST=-1};
+    s{GUESS=\w*}{GUESS=MOSAVED};
+  } else {
+    s{IREST=-?\d}{IREST=0};
+    s{GUESS=\w*}{GUESS=HUCKEL};
+  }
+#    s{_CHARGE_}{\@$qmmm_pntchs/N};
+  print GUS_IN;
+}
+
+# print $DATA group
+print GUS_IN "\n \$DATA\ncreated by $progname\nC1\n";
+
+while (<HOT_COORDS>) {
+  my ($name, $x, $y, $z) = split;
+  $name = lc ($name);
+  printf GUS_IN ("%s %4.1f %14.8f %14.8f %14.8f\n",
+		 $name, $znuc{$name}, $x, $y, $z);
+}
+
+print GUS_IN " \$END\n";
+
+close (GUS_IN);
+close (HOT_COORDS);
+close (TEMPLATE);
+
+# collect GAMESS-US output in an array and in a file
+@gus_out = `$ENV{'GAMESS_DDIKICK'} $gus_in_file $ENV{'GAMESS_PATH'} $ENV{'GAMESS_EXE'} $ENV{'GAMESS_SCRDIR'} $ENV{'QION_NPROCS'} $ENV{'GAMESS_HOSTLIST'} < /dev/null | tee $gus_out_file`;
+
+for (@gus_out) {
+  $ok = 1 if /EXECUTION OF GAMESS TERMINATED NORMALLY/;
+
+#FINAL RHF ENERGY IS     -613.6741157530
+  if (/^ FINAL.*ENERGY IS\s+(.*?) AFTER/) {
+    open (ENERGY, ">> $gus_energy_file") or
+      die "$progname: can't open $gus_energy_file";
+    printf ENERGY ("%16.9f\n", $1);
+    close (ENERGY),
+  }
+}
+
+exit 1 unless $ok;
+
+
+# extract forces from GAMESS-US PUNCH file and write forces to file
+open (PUNCH, "< $gus_punch_file") or
+  die "$progname: can't open $gus_punch_file";
+
+open (FORCES, "> $qmmm_forces") or
+  die "$progname: can't open $qmmm_forces";
+
+while (<PUNCH>) {
+  if (/^ \$GRAD$/ .. /^ \$END$/) {
+    next if /^E|^ \$GRAD$|^ \$END$/;
+
+    @gradient = split;
+    printf FORCES ("%20.14G  %20.14G  %20.14G\n",
+                   -$gradient[2], -$gradient[3], -$gradient[4]);
+
+    $gradient_found = 1;
+  }
+}
+
+close (FORCES);
+close (PUNCH);
+
+exit 1 unless $gradient_found;
+
+# copy output file
+`cp $gus_out_file $gus_out_file_prev`;
+
+
+# delete temporary files and exit gracefully
+unlink "$gus_in_file", "$gus_out_file", "$qmmm_pntchs", "$qmmm_coords",
+  "$ENV{PUNCH}";
+
+my $lasthost = "";
+
+for my $host ($ENV{'GAMESS_HOSTLIST'}) {
+  if ($host ne $lasthost) {
+    print $host;
+    `rsh $host rm -f $ENV{'GAMESS_JOB_BASE'}.F*`;
+  }
+
+  $lasthost = $host;
+}
+
+exit 0;

@@ -1,0 +1,24 @@
+Li(+): SA potential (angles < 60 deg included in three-body construction)
+see Hannes H. Loeffler, J Comput Chem 24(2003), 1232
+
+ &cntrl
+  ionnam = 'Li', qion = 1.0,
+  topt = 298.16, dens = 0.99702, rcut = 12.0,
+  ithree = t, a3bd = 0.1603215, b3bd = 0.4193048, c3bd = 0.2905140,
+  init = t, nstep = 100000, nout = 50, nstat = 500, nrst = 5000, noutcv = 100,
+    naver = 50000, ncom = 10000,
+
+  fout = 'md1.out',
+  fenout = 'md1.en',
+  finfo = 'md1.info',
+  fstart = 'eq.rst',
+  frst = 'md1.rst',
+  ftraj = 'md1.traj',
+  fumbst = 'md1.hst',
+  fumbtr = 'md1.trc'
+ &end
+
+ -899.6758090  3473.5398804  -5344.0700720  4221.6083882  0.0  0.0
+            4             6              9            12
+  200.8513230  -342.3087182    250.7581516   -64.8277670  0.0  0.0
+            4             5              7            12

@@ -1,0 +1,39 @@
+Zn(2+), umbrella sampling along an ion--water distance
+10 windows with 5000 steps of equilibration
+umbrella potentials are defined at the end of the input file
+for potential see: Ahmed M Mohammed et al. J Mol Liq 119(2005), 55
+  
+ &cntrl
+  ionnam = 'Zn', qion = 2.0,
+  topt = 298.16, dens = 0.997, rcut = 12.0,
+  init = t, nstep = 100000, nstat = 50, nout = 1000, nrst = 1000, noutcv = 10,
+    naver = 10000,
+  iumb = t, nwin = 10, numbeq = 5000, nuidx1 = 1498, nuidx2 = 318, hdel = 0.1,
+  ithree = t, a3bd = 0.7247086, b3bd = 0.1539069, c3bd = 0.6957935,
+              d3bd = 0.0, e3bd = 0.0, k3bd = 0,
+  
+  fout   = 'umb.out',
+  fenout = 'umb.en',
+  finfo  = 'umb.info',
+  fstart = 'start.rvf',
+  frst   = 'umb.rst',
+  ftraj  = 'umb.traj',
+  fumbst = 'umb.hst',
+  fumbtr = 'umb.trc'
+ &end
+
+ -6951.8865063  37582.1532506  -64535.7471056  39920.3849756  0.0  0.0
+  5 7 9 11
+ -215.6860386  1856.9020350  -3419.8730627  2125.4629242  0.0  0.0
+  5 7 9 11
+
+  20.0 4.0
+  20.0 3.9
+  20.0 3.8
+  20.0 3.7
+  20.0 3.6
+  20.0 3.5
+  20.0 3.4
+  20.0 3.3
+  20.0 3.2
+  20.0 3.1

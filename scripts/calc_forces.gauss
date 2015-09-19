@@ -1,0 +1,102 @@
+#! /usr/bin/perl
+# $Id: calc_forces.gauss,v 1.2 2005/05/20 11:05:11 hal Exp $
+#
+# calc_forces.gauss: compute ab initio forces via Gaussian
+#
+
+
+
+# get script's name
+my $progname = $0;
+$progname =~ s{^.*/}{};
+
+my $qmmm_coords = $ARGV[0];	# file with coords from QM zone
+my $qmmm_forces = $ARGV[1];	# file into which forces will be written
+my $qmmm_pntchs = $ARGV[2];	# file containing point charges
+my $changed = $ARGV[3];		# flag indicating changes in the QM zone
+
+my $gauss_exe = "g98";		# Gaussian driver
+my $guess_string = "Guess=Check"; # how to obtain initial guess
+
+my $base = "gauss";
+my $template_file = "$base.template"; # must exist before you start!
+my $gauss_in_file = "$base.in";	# temporary Gaussian input file
+my $gauss_out_file = "$base.out"; # temporary Gaussian output file
+my $gauss_out_file_prev = $gauss_out_file . ".prev";
+
+my $ok = 0;			# error flag
+my $forces_found = 0;		# error flag
+
+my @gauss_out = ();		# collects Gaussian output
+my @forces = ();		# helper variable
+
+
+
+# create input file from template
+open (TEMPLATE, "< $template_file") or
+  die "$progname: can't open $template_file";
+open (HOT_COORDS, "< $qmmm_coords") or
+  die "$progname: can't open $qmmm_coords";
+open (GAUSS_IN, "> $gauss_in_file") or
+  die "$progname: can't open $gauss_in_file";
+
+$guess_string = "" if ($changed);
+
+while (<TEMPLATE>) {
+  if ( m{^\s*_HOTSPOT_COORDS_} ) {
+    while (<HOT_COORDS>) {
+      print GAUSS_IN;
+    }
+
+    next;
+  } else {
+    s{_GUESS_}{ $guess_string };
+    s{_CHARGE_}{\@$qmmm_pntchs/N};
+    print GAUSS_IN;
+  }
+}
+
+close (GAUSS_IN);
+close (HOT_COORDS);
+close (TEMPLATE);
+
+
+# collect Gaussian output in an array and in a file
+@gauss_out = `$gauss_exe < $gauss_in_file | tee $gauss_out_file`;
+
+
+# extract forces from Gaussian output and write forces to file
+open (FORCES, "> $qmmm_forces") or
+  die "$progname: can't open $qmmm_forces";
+
+for (@gauss_out) {
+  if (/^ SCF Done:  E\(.*?\) =\s*(.*?)\s+[aA]\./) {
+    print FORCES "$1\n";
+  }
+
+  if (/^ Center\s+Atomic\s+Forces/ .. /^ Cartesian Forces:\s+Max/) {
+    if (/^\s+\d+\s+\d{1,3}\s+/) {
+      @forces = split;
+      print FORCES "$forces[2] $forces[3] $forces[4]\n";
+
+      $forces_found = 1;
+    }
+  }
+
+  $ok = 1 if /Normal termination of Gaussian/;
+}
+
+close (FORCES);
+
+
+exit 1 unless ($ok and $forces_found);
+
+`cp $gauss_out_file $gauss_out_file_prev`;
+
+# delete temporary files and exit gracefully
+unlink $gauss_in_file;
+unlink $gauss_out_file;
+unlink $qmmm_pntchs;
+unlink $qmmm_coords;
+
+exit 0;

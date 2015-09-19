@@ -1,0 +1,98 @@
+#!/bin/sh
+# $Id: qion,v 1.1 2005/06/07 10:12:20 hal Exp $
+#
+# qion: wrapper script for Qion
+#
+
+
+
+progname=`basename $0`
+
+QION_ROOT=/usr/local/qmmm-md; export QION_ROOT
+md_prog=$QION_ROOT/Qion
+
+
+if [ -z "$QION_NPROCS" ]; then
+  QION_NPROCS=2; export QION_NPROCS
+fi
+
+if [ ! -d $QION_ROOT/data -o ! -x $md_prog ]; then
+  echo "Qion not properly installed" 1>&2
+  exit 1
+fi
+
+case "$QION_FPROG" in
+  gauss)
+	   if [ -z "$GAUSS_EXEDIR" ]; then
+	     echo "Gaussian not properly installed" 1>&2
+	     exit 2
+	   fi
+	   ;;
+
+  gus)
+       curr_dir=`pwd`
+
+       if [ "$QION_NPROCS" -gt 1 ]; then
+	 # get list of hosts (MPICH format)
+	 machines=/etc/mpich/machines.LINUX
+
+	 if [ ! -f $machines ]; then
+	   echo "$machines does not exist" 1>&2
+	   exit 3
+	 fi
+
+	 GAMESS_HOSTLIST=""
+
+	 while read line; do
+	   echo $line | grep -q ^# && continue
+
+	   nproc=`expr "$line" : '.*:\(.*\)'`
+
+	   if [ -z "$nproc" ]; then
+	     GAMESS_HOSTLIST="$GAMESS_HOSTLIST $line"
+	   else
+	     node=`expr "$line" : '\(.*\):.*'`
+
+	     while [ $nproc -gt 0 ]; do
+	       GAMESS_HOSTLIST="$GAMESS_HOSTLIST $node"
+	       nproc=`expr $nproc - 1`
+	     done
+	   fi
+	 done < $machines
+       else
+	 GAMESS_HOSTLIST=`hostname`
+       fi
+
+
+       GAMESS_EXE=gamess.01.x
+       GAMESS_PATH=/usr/local/gamess
+       GAMESS_DDIKICK=$GAMESS_PATH/ddikick.x
+       GAMESS_SCRDIR=${GAMESS_SCRDIR-/scratch/$USER}
+       GAMESS_JOB_BASE=qmmm_gus_$$
+
+       INPUT=$GAMESS_SCRDIR/$GAMESS_JOB_BASE.F05
+       AOINTS=$GAMESS_SCRDIR/$GAMESS_JOB_BASE.F08
+       PUNCH=$GAMESS_SCRDIR/$GAMESS_JOB_BASE.dat
+       DICTNRY=$GAMESS_SCRDIR/$GAMESS_JOB_BASE.dic
+       WORK15=$GAMESS_SCRDIR/$GAMESS_JOB_BASE.F15
+       DASORT=$GAMESS_SCRDIR/$GAMESS_JOB_BASE.F20
+       DFTGRID=$GAMESS_SCRDIR/$GAMESS_JOB_BASE.F22
+       EXTBAS=$curr_dir/gus.basis
+
+       PATH=${PATH}:$GAMESS_PATH
+
+       export GAMESS_EXE GAMESS_PATH GAMESS_DDIKICK
+       export GAMESS_HOSTLIST GAMESS_SCRDIR GAMESS_JOB_BASE
+       export INPUT AOINTS PUNCH DICTNRY DFTGRID DASORT WORK15 EXTBAS
+       export PATH
+       ;;
+
+  tm|*)
+	if [ -z "$TURBODIR" ]; then
+	  echo "TURBOMOLE not properly installed" 1>&2
+	  exit 2
+	fi
+esac
+
+# run the MD program
+$md_prog $@

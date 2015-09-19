@@ -1,0 +1,8 @@
+%chk=/scratch/hal/lithium
+#P RHF/D95V*/Force SCF(MaxCycle=128) Population=None _GUESS_
+
+QM/MM-MD test with Li(+) in H2O
+
+1 1
+_HOTSPOT_COORDS_
+

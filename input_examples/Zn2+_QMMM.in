@@ -1,0 +1,24 @@
+Zn(II) QM/MM-MD equilibration with point charges
+QM radius is 3.6 A, smoothing starts at 3.4 A
+for potential see: Ahmed M Mohammed et al. J Mol Liq 119(2005), 55
+  
+ &cntrl
+  ionnam = 'Zn', qion = 2.0,
+  topt = 298.16, taut = 0.5, dens = 0.997, rcut = 12.0,
+  iqmmm = t, ipntch = t, ron = 3.4, roff = 3.6,
+  init = t, nstep = 25000, nstat = 25, nout = 20, nrst = 10, noutcv = 10,
+    naver = 5000, ncom = 5000,
+  ithree = t, a3bd = 0.7247086, b3bd = 0.1539069, c3bd = 0.6957935,
+  
+  fout   = 'eq1.out',
+  fenout = 'eq1.en',
+  finfo  = 'eq1.info',
+  fstart = 'MD_eq1.rst',
+  frst   = 'eq1.rst',
+  ftraj  = 'eq1.traj'
+ &end
+
+ -6951.8865063  37582.1532506  -64535.7471056  39920.3849756  0.0  0.0
+  5 7 9 11
+ -215.6860386  1856.9020350  -3419.8730627  2125.4629242  0.0  0.0
+  5 7 9 11

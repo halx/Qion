@@ -1,0 +1,28 @@
+
+QM/MM-MD test with Li(+) in H2O
+sy c1
+a coord
+*
+no
+b "li","o" dzp hondo
+b "h" dz dunning
+file Dunning
+*
+eht
+y
++1
+y
+scf
+thi
+99999
+99999
+iter
+100
+
+drv
+-sec -dip -pol
+*
+*
+*
+*
+

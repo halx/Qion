@@ -1,0 +1,22 @@
+Na(I): 2+3bd potential by Ahmed M Mohammed
+ 
+ &cntrl
+  ion = t, ionnam = 'Na', qion = 1.0,
+  topt = 298.16, dens = 0.997, rcut = 12.0,
+  nstep = 2500000, init = t, nstat = 1000, nout = 10, nrst = 10000,
+    noutcv = 250, naver = 100000, ncom = 10000,
+  ithree = t, r3bd = 6.0, a3bd = 0.2100544, b3bd = 0.5517802, c3bd = 0.0772374,
+ 
+  fout   = 'md1.out',
+  fenout = 'md1.en',
+  finfo  = 'md1.info',
+  fstart = 'eq2.rst',
+  frst   = 'md1.rst',
+  ftraj  = 'md1.traj',
+  fveloc = 'md1.vel'
+ &end
+
+ -5910.5520633 13496.5226774 -14990.2638565  6388.367164941 0.0 0.0
+  5 6 9 11
+  1793.5325740 -4084.2697028   9261.2512613 -8649.9571656   0.0 0.0
+  5 6 9 11

@@ -1,0 +1,32 @@
+! GAMESS-US template input file
+! $Id: gus.template,v 1.1.1.1 2003/06/17 10:15:22 hal Exp $
+
+ $CONTRL
+   SCFTYP=RHF RUNTYP=GRADIENT
+   ICHARG=+1 MULT=1
+   COORD=CART
+   ISPHER=+1
+   NPRINT=-5
+   IREST=0   ! mandatory if GUESS is also given
+ $END
+
+ $SCF
+   DIRSCF=.T. FDIFF=.T.
+   CONV=1.0d-05
+   NPUNCH=2
+ $END
+
+!$DFT
+!  DFTTYP=B3LYP METHOD=GRID
+!$END
+
+! make sure EXTBAS is set correctly
+ $BASIS
+   EXTFIL=.T. GBASIS=
+ $END
+
+ $GUESS
+   GUESS=HUCKEL  ! mandatory if IREST is also given
+ $END
+
+! $DATA group will be appended here
