@@ -1,1 +1,3 @@
-# Qion: old hotspot QM/MM-MD program I used for my PhD thesis
+# Qion
+
+old hotspot QM/MM-MD program I developed and used for my PhD thesis
